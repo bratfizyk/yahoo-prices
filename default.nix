@@ -1,12 +1,12 @@
-{ mkDerivation, base }:
+{ mkDerivation, base, bytestring, Cabal, cassava, lens, wreq }:
 mkDerivation {
-  pname = "FortPolio";
+  pname = "yahoo-price";
   version = "0.1.0.0";
   src = ./.;
-  isLibrary = false;
+  isLibrary = true;
   isExecutable = true;
   executableHaskellDepends = [
-    base
+    base bytestring Cabal cassava lens wreq
   ];
   license = "MIT";
   hydraPlatforms = stdenv.lib.platforms.none;

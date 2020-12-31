@@ -21,7 +21,11 @@ library
   exposed-modules:     MyLib
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.13 && <4.14
+  build-depends:       base >=4.13 && <4.14,
+                       bytestring,
+                       cassava,
+                       lens,
+                       wreq
   hs-source-dirs:      src
   default-language:    Haskell2010
 
