@@ -6,6 +6,8 @@ import Control.Lens ((^.))
 import Data.ByteString.Char8 (unpack)
 import Data.Csv (Header, FromField(..), FromNamedRecord(..), (.:), decodeByName)
 import Data.Int (Int64)
+import Data.List (intercalate)
+import Data.Maybe (catMaybes)
 import Data.Time (UTCTime, defaultTimeLocale, nominalDiffTimeToSeconds)
 import Data.Time.Calendar (Day, fromGregorian, diffDays)
 import Data.Time.Format (parseTimeM)
@@ -53,10 +55,22 @@ data YahooRequest = YahooRequest {
 
 requestUrl :: YahooRequest -> String
 requestUrl (YahooRequest { ticker = (Ticker t), interval = i }) = 
-    printf "%s/%s" baseUrl t
+    printf "%s/%s%s" baseUrl t (queryString queryParams)
     where
         baseUrl :: String
         baseUrl = "http://query1.finance.yahoo.com/v7/finance/download"
+
+        paramToString :: YahooParam a => a -> String
+        paramToString p = printf "%s=%s" (key p) (symbol p)
+
+        queryParams :: [String]
+        queryParams = catMaybes [
+                fmap paramToString i
+            ]
+
+        queryString :: [String] -> String
+        queryString [] = ""
+        queryString ps = printf "?%s" (intercalate "&" ps)
 
 -- Response
 
@@ -88,6 +102,7 @@ instance FromNamedRecord Price where
 
 fetch :: YahooRequest -> IO (Either String (Header, V.Vector Price))
 fetch request = do
+    printf "Requesting: %s\n" (requestUrl request)
     response <- get $ requestUrl request
     let body = response ^. responseBody
     return $ decodeByName body
@@ -97,19 +112,8 @@ fetch request = do
 request :: YahooRequest
 request = YahooRequest {
     ticker   = Ticker "RSX",
-    interval = Nothing
+    interval = Just Monthly
 }
-
--- Time
-secondsSinceEpoch :: UTCTime -> Int64
-secondsSinceEpoch = floor . nominalDiffTimeToSeconds . utcTimeToPOSIXSeconds
-
-dayAsEpoch :: Day -> Integer
-dayAsEpoch day = 
-    3600 * 24 * (diffDays day start)
-    where
-        start :: Day
-        start = fromGregorian 1970 1 1
 
 someFunc :: IO ()
 someFunc = do
