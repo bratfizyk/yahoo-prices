@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module MyLib (someFunc) where
+module Web.Data.Yahoo.API (someFunc) where
     
 import Control.Lens ((^.))
 import Data.ByteString.Char8 (unpack)
@@ -100,9 +100,7 @@ request = YahooRequest {
     interval = Nothing
 }
 
-processPrice :: Price -> IO ()
-processPrice = putStrLn . show
-
+-- Time
 secondsSinceEpoch :: UTCTime -> Int64
 secondsSinceEpoch = floor . nominalDiffTimeToSeconds . utcTimeToPOSIXSeconds
 
@@ -121,3 +119,7 @@ someFunc = do
         Right (sdf, v) ->
             V.forM_ v $ processPrice
     return ()
+
+    where
+        processPrice :: Price -> IO ()
+        processPrice = putStrLn . show
