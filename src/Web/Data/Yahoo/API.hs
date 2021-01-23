@@ -5,72 +5,20 @@ module Web.Data.Yahoo.API (someFunc) where
 import Control.Lens ((^.))
 import Data.ByteString.Char8 (unpack)
 import Data.Csv (Header, FromField(..), FromNamedRecord(..), (.:), decodeByName)
-import Data.Int (Int64)
-import Data.List (intercalate)
-import Data.Maybe (catMaybes)
-import Data.Time (UTCTime, defaultTimeLocale, nominalDiffTimeToSeconds)
-import Data.Time.Calendar (Day, fromGregorian, diffDays)
+import Data.Time (defaultTimeLocale)
+import Data.Time.Calendar (Day, fromGregorian)
 import Data.Time.Format (parseTimeM)
-import Data.Time.Clock.POSIX (getCurrentTime, utcTimeToPOSIXSeconds)
+import Data.Time.Clock.POSIX (getCurrentTime)
 import Network.Wreq (get, responseBody)
-import Text.Printf (printf)
+
+import Web.Data.Yahoo.Request
+    ( YahooRequest(..),
+      TimeRange(Range, After),
+      Interval(Daily),
+      Ticker(..),
+      requestUrl )
 
 import qualified Data.Vector as V
-
--- Request
-
-data Ticker = Ticker String
-
-class YahooParam a where
-    key    :: a -> String
-    symbol :: a -> String
-
-data Interval = 
-    Daily
-    | Weekly
-    | Monthly
-    deriving (Show, Eq)
-
-instance YahooParam Interval where
-    key _ = "interval"
-    symbol Daily = "1d"
-    symbol Weekly = "1wk"
-    symbol Monthly = "1mo"
-
-data Events =
-    HistoricalPrices
-    | Dividends
-    | Splits
-
-instance YahooParam Events where
-    key _ = "events"
-    symbol HistoricalPrices = "history"
-    symbol Dividends = "div"
-    symbol Splits = "split"
-
-data YahooRequest = YahooRequest {
-    ticker   :: Ticker,
-    interval :: Maybe Interval
-}
-
-requestUrl :: YahooRequest -> String
-requestUrl (YahooRequest { ticker = (Ticker t), interval = i }) = 
-    printf "%s/%s%s" baseUrl t (queryString queryParams)
-    where
-        baseUrl :: String
-        baseUrl = "http://query1.finance.yahoo.com/v7/finance/download"
-
-        paramToString :: YahooParam a => a -> String
-        paramToString p = printf "%s=%s" (key p) (symbol p)
-
-        queryParams :: [String]
-        queryParams = catMaybes [
-                fmap paramToString i
-            ]
-
-        queryString :: [String] -> String
-        queryString [] = ""
-        queryString ps = printf "?%s" (intercalate "&" ps)
 
 -- Response
 
@@ -99,21 +47,38 @@ instance FromNamedRecord Price where
             <*> r .: "Volume"
 
 -- Fetch
-
 fetch :: YahooRequest -> IO (Either String (Header, V.Vector Price))
 fetch request = do
-    printf "Requesting: %s\n" (requestUrl request)
+    putStrLn $ "Requesting: " ++ (requestUrl request)
     response <- get $ requestUrl request
     let body = response ^. responseBody
     return $ decodeByName body
 
--- Test
-
-request :: YahooRequest
-request = YahooRequest {
-    ticker   = Ticker "RSX",
-    interval = Just Monthly
+-- API
+requestForTicker :: Ticker -> YahooRequest
+requestForTicker t = YahooRequest {
+    ticker   = t,
+    interval = Nothing,
+    period   = Nothing
 }
+
+withDaily :: YahooRequest -> YahooRequest
+withDaily (YahooRequest {ticker = t, period = p}) = YahooRequest {
+    ticker   = t,
+    interval = Just Daily,
+    period   = p
+}
+
+after :: Day -> YahooRequest -> YahooRequest
+after day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
+    ticker   = t,
+    interval = i,
+    period   = Just $ After day
+}
+
+-- Test
+request :: YahooRequest
+request =  after (fromGregorian 2021 01 12) . withDaily . requestForTicker . Ticker $ "RSX"
 
 someFunc :: IO ()
 someFunc = do
