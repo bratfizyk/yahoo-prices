@@ -5,6 +5,7 @@ module Web.Data.Yahoo.API (someFunc) where
 import Control.Lens ((^.))
 import Data.ByteString.Char8 (unpack)
 import Data.Csv (Header, FromField(..), FromNamedRecord(..), (.:), decodeByName)
+import Data.Vector (toList)
 import Data.Time (defaultTimeLocale)
 import Data.Time.Calendar (Day, fromGregorian)
 import Data.Time.Format (parseTimeM)
@@ -13,15 +14,12 @@ import Network.Wreq (get, responseBody)
 
 import Web.Data.Yahoo.Request
     ( YahooRequest(..),
-      TimeRange(Range, After),
+      TimeRange(Before, After, Range),
       Interval(Daily),
       Ticker(..),
       requestUrl )
 
-import qualified Data.Vector as V
-
 -- Response
-
 data Price = Price {
     date     :: Day,
     open     :: Double,
@@ -47,12 +45,16 @@ instance FromNamedRecord Price where
             <*> r .: "Volume"
 
 -- Fetch
-fetch :: YahooRequest -> IO (Either String (Header, V.Vector Price))
+fetch :: YahooRequest -> IO (Either String [Price])
 fetch request = do
     putStrLn $ "Requesting: " ++ (requestUrl request)
     response <- get $ requestUrl request
-    let body = response ^. responseBody
-    return $ decodeByName body
+    return $ right (toList . snd) . decodeByName $ response ^. responseBody
+
+    where
+        right :: (t -> b) -> Either a t -> Either a b
+        right f (Right x) = Right (f x)
+        right _ (Left x)  = Left x
 
 -- API
 requestForTicker :: Ticker -> YahooRequest
@@ -76,17 +78,30 @@ after day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
     period   = Just $ After day
 }
 
+before :: Day -> YahooRequest -> YahooRequest
+before day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
+    ticker   = t,
+    interval = i,
+    period   = Just $ Before day
+}
+
+between :: (Day, Day) -> YahooRequest -> YahooRequest
+between (from, to) (YahooRequest {ticker = t, interval = i}) = YahooRequest {
+    ticker   = t,
+    interval = i,
+    period   = Just $ Range from to
+}
+
 -- Test
 request :: YahooRequest
-request =  after (fromGregorian 2021 01 12) . withDaily . requestForTicker . Ticker $ "RSX"
+request =  between (fromGregorian 2021 01 08, fromGregorian 2021 01 15) . withDaily . requestForTicker . Ticker $ "RSX"
 
 someFunc :: IO ()
 someFunc = do
     result <- fetch request
     case result of
         Left err -> putStrLn err
-        Right (sdf, v) ->
-            V.forM_ v $ processPrice
+        Right v  -> mapM_ processPrice v
     return ()
 
     where
