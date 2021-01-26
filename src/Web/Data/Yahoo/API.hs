@@ -19,6 +19,8 @@ import Web.Data.Yahoo.Request
       Ticker(..),
       requestUrl )
 
+type Request = YahooRequest
+
 data Price = Price {
     date     :: Day,
     open     :: Double,
@@ -54,8 +56,8 @@ fetch request = do
         right f (Right x) = Right (f x)
         right _ (Left x)  = Left x
 
-requestForTicker :: String -> YahooRequest
-requestForTicker t = YahooRequest {
+request :: String -> YahooRequest
+request t = YahooRequest {
     ticker   = Ticker t,
     interval = Nothing,
     period   = Nothing
