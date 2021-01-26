@@ -4,7 +4,7 @@ let
   inherit (pkgs) haskellPackages;
 
   haskellDeps = ps: with ps; [
-    base bytestring cassava lens time vector wreq
+    base bytestring cassava hspec lens time vector wreq
   ];
 
   ghc = pkgs.haskell.packages.ghc884.ghcWithPackages haskellDeps;
