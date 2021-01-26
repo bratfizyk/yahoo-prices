@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Web.Data.Yahoo.API (someFunc) where
+module Web.Data.Yahoo.API where
     
 import Control.Lens ((^.))
 import Data.ByteString.Char8 (unpack)
@@ -19,7 +19,6 @@ import Web.Data.Yahoo.Request
       Ticker(..),
       requestUrl )
 
--- Response
 data Price = Price {
     date     :: Day,
     open     :: Double,
@@ -44,7 +43,6 @@ instance FromNamedRecord Price where
             <*> r .: "Adj Close"
             <*> r .: "Volume"
 
--- Fetch
 fetch :: YahooRequest -> IO (Either String [Price])
 fetch request = do
     putStrLn $ "Requesting: " ++ (requestUrl request)
@@ -56,10 +54,9 @@ fetch request = do
         right f (Right x) = Right (f x)
         right _ (Left x)  = Left x
 
--- API
-requestForTicker :: Ticker -> YahooRequest
+requestForTicker :: String -> YahooRequest
 requestForTicker t = YahooRequest {
-    ticker   = t,
+    ticker   = Ticker t,
     interval = Nothing,
     period   = Nothing
 }
@@ -92,18 +89,5 @@ between (from, to) (YahooRequest {ticker = t, interval = i}) = YahooRequest {
     period   = Just $ Range from to
 }
 
--- Test
-request :: YahooRequest
-request =  between (fromGregorian 2021 01 08, fromGregorian 2021 01 15) . withDaily . requestForTicker . Ticker $ "RSX"
-
-someFunc :: IO ()
-someFunc = do
-    result <- fetch request
-    case result of
-        Left err -> putStrLn err
-        Right v  -> mapM_ processPrice v
-    return ()
-
-    where
-        processPrice :: Price -> IO ()
-        processPrice = putStrLn . show
+day :: Integer -> Int -> Int -> Day
+day = fromGregorian
