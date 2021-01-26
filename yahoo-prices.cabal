@@ -19,7 +19,7 @@ extra-source-files:  CHANGELOG.md
 
 library
   exposed-modules:     Web.Data.Yahoo.API
-  other-modules:       Web.Data.Yahoo.Time,
+  other-modules:       Web.Data.Yahoo.Utils,
                        Web.Data.Yahoo.Request
   -- other-extensions:
   build-depends:       base >=4.13 && <4.14,
