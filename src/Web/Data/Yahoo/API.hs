@@ -23,7 +23,7 @@ import Data.Time.Format (parseTimeM)
 import Data.Time.Clock.POSIX (getCurrentTime)
 import Network.Wreq (get, responseBody)
 
-import Web.Data.Yahoo.Utils (right)
+import Web.Data.Yahoo.Time (right)
 import Web.Data.Yahoo.Request
     ( YahooRequest(..),
       TimeRange(Before, After, Range),

@@ -1,5 +1,5 @@
 # Revision history for yahoo-prices
 
-## 0.1.0.0 -- YYYY-mm-dd
+## 0.0.1.0 -- YYYY-mm-dd
 
 * First version. Released on an unsuspecting world.

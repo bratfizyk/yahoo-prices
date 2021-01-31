@@ -1,4 +1,4 @@
-module Web.Data.Yahoo.Utils (dayAsEpoch, right) where
+module Web.Data.Yahoo.Time (dayAsEpoch, right) where
 
 import Data.Time.Calendar (Day, fromGregorian, diffDays)
 
