@@ -47,8 +47,9 @@ test-suite yahoo-prices-test
   main-is:             Tests.hs
   other-modules:       Gen
   build-depends:       base >=4.13 && <4.14,
+                       bytestring,
                        hspec,
-                       yahoo-prices-main,
-                       time,
                        QuickCheck,
+                       time,
+                       yahoo-prices-main,
                        yahoo-prices-utils

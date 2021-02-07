@@ -2,6 +2,7 @@
 
 module Main (main) where
 
+import Data.ByteString.Lazy (ByteString)
 import Data.Either (isRight)
 import Test.Hspec (hspec, describe, it, shouldSatisfy)
 import Test.Hspec.QuickCheck (prop)
@@ -14,6 +15,7 @@ import Web.Data.Yahoo.Response (PriceResponse, tryParseAsPrice)
 isDivisibleBy :: Integral a => a -> a -> Bool
 isDivisibleBy n x = (x `mod` n) == 0
 
+sample :: ByteString
 sample =
     "Date,Open,High,Low,Close,Adj Close,Volume\n\
     \2020-02-07,24.620001,24.740000,24,469999,24.600000,23.815666,7072600"
