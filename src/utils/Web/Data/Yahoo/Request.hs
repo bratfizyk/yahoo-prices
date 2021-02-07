@@ -5,7 +5,7 @@ import Data.Maybe (catMaybes)
 import Data.Time.Calendar (Day, fromGregorian)
 import Text.Printf (printf)
 
-import Web.Data.Yahoo.Time (dayAsEpoch)
+import Web.Data.Yahoo.Utils (dayAsEpoch)
 
 data Ticker = Ticker String
 

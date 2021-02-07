@@ -6,7 +6,7 @@ import Test.Hspec.QuickCheck (prop)
 
 import Gen ()
 import Web.Data.Yahoo.API (fetchLatest)
-import Web.Data.Yahoo.Time (dayAsEpoch)
+import Web.Data.Yahoo.Utils (dayAsEpoch)
 
 isDivisibleBy :: Integral a => a -> a -> Bool
 isDivisibleBy n x = (x `mod` n) == 0

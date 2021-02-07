@@ -18,18 +18,26 @@ Source-repository head
   type:     git
   location: https://github.com/bratfizyk/yahoo-finance
 
-library
-  exposed-modules:     Web.Data.Yahoo.API,
-                       Web.Data.Yahoo.Time
-  other-modules:       Web.Data.Yahoo.Request
+library yahoo-prices-utils
+  exposed-modules:     Web.Data.Yahoo.Utils,
+                       Web.Data.Yahoo.Request
   build-depends:       base >=4.13 && <4.14,
+                       time
+  hs-source-dirs:      src/utils
+  default-language:    Haskell2010
+
+library yahoo-prices-main
+  exposed-modules:     Web.Data.Yahoo.API,
+                       Web.Data.Yahoo.Response
+  build-depends:       base >=4.13 && <4.14,
+                       yahoo-prices-utils,
                        bytestring,
                        cassava,
                        lens,
                        time,
                        vector,
                        wreq
-  hs-source-dirs:      src
+  hs-source-dirs:      src/lib
   default-language:    Haskell2010
 
 test-suite yahoo-prices-test
@@ -40,6 +48,7 @@ test-suite yahoo-prices-test
   other-modules:       Gen
   build-depends:       base >=4.13 && <4.14,
                        hspec,
-                       yahoo-prices,
+                       yahoo-prices-main,
                        time,
-                       QuickCheck
+                       QuickCheck,
+                       yahoo-prices-utils
