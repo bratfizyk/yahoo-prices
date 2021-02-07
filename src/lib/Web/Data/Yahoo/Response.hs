@@ -2,7 +2,7 @@
 
 -- | A set of data types corresponding to records returned from Yahoo API.
 -- Note that this is a subject to modifications whenever the remote API changes on Yahoo side.
-module Web.Data.Yahoo.Response (PriceResponse(..), tryParse) where
+module Web.Data.Yahoo.Response (PriceResponse(..), tryParse, tryParseAsPrice) where
 
 import Data.ByteString.Char8 (unpack)
 import Data.ByteString.Lazy (ByteString)
@@ -42,3 +42,7 @@ instance FromNamedRecord PriceResponse where
 -- | An auxiliary function that attempts to parse a string provided and interpret it as a CSV set of values of type a.
 tryParse :: FromNamedRecord a => ByteString -> Either String [a]
 tryParse = right (toList . snd) . decodeByName
+
+-- | A specialized version of tryParse dedicated to parsing PriceResponse records
+tryParseAsPrice :: ByteString -> Either String [PriceResponse]
+tryParseAsPrice = tryParse

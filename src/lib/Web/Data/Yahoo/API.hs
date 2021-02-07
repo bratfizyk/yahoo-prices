@@ -23,7 +23,7 @@ import Web.Data.Yahoo.Request
       Ticker(..),
       requestUrl )
 
-import Web.Data.Yahoo.Response (PriceResponse, tryParse)
+import Web.Data.Yahoo.Response (PriceResponse, tryParseAsPrice)
 
 -- | An alias for a type representing the request record.
 type Request = YahooRequest
@@ -32,14 +32,14 @@ type Request = YahooRequest
 fetch :: YahooRequest -> IO (Either String [PriceResponse])
 fetch request = do
     response <- get $ requestUrl request
-    return $ tryParse $ response ^. responseBody
+    return $ tryParseAsPrice $ response ^. responseBody
 
 -- | Sends a request for the specified ticker and returns its latest prices or an error code.
 -- Throws an exception if the returned list of prices is empty.
 fetchLatest :: String -> IO (Either String PriceResponse)
 fetchLatest ticker = do
     response <- get . requestUrl . request $ ticker
-    return $ right head . tryParse $ response ^. responseBody
+    return $ right head . tryParseAsPrice $ response ^. responseBody
 
 -- | Creates an unparameterized request for the ticker provided. 
 -- If the request gets send without specifying any additional parameters, it'll return the latest price(s).
