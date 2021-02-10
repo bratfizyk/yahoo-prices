@@ -18,7 +18,7 @@ instance FromField Day where
     parseField = parseTimeM True defaultTimeLocale "%Y-%m-%d" . unpack
 
 -- | A type representing market price data returned by Yahoo.
-data PriceResponse = Price {
+data PriceResponse = PriceResponse {
     date     :: Day,
     open     :: Double,
     high     :: Double,
@@ -30,7 +30,7 @@ data PriceResponse = Price {
 
 instance FromNamedRecord PriceResponse where
     parseNamedRecord r = 
-        Price 
+        PriceResponse 
             <$> r .: "Date" 
             <*> r .: "Open"
             <*> r .: "High"
