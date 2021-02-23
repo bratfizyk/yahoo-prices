@@ -21,7 +21,7 @@ import Web.Data.Yahoo.Request
       TimeRange(Before, After, Range),
       Interval(Daily, Weekly),
       Ticker(..),
-      requestUrl )
+      requestUrl)
 
 import Web.Data.Yahoo.Response (PriceResponse, tryParseAsPrice)
 
