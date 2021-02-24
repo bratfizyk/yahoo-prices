@@ -11,7 +11,7 @@ description:
   market data for various financial instruments from Yahoo website.
   .
   The same data can be viewed in "Historic Data" section.
-  An example for the `SPI` ETF can be found here: https://finance.yahoo.com/quote/SPY/history?p=SPY.
+  An example for the `SPY` ETF can be found here: https://finance.yahoo.com/quote/SPY/history?p=SPY.
 
 bug-reports:         https://github.com/bratfizyk/yahoo-finance/issues
 license:             MIT

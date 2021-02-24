@@ -1,6 +1,6 @@
 # yahoo-finance
 
-It's a simple wrapper around Yahoo Finance API, that allows to fetch market data for various financial instruments from Yahoo website. The same data can be viewed in "Historic Data" section. An example for the `SPI` ETF can be found [here](https://finance.yahoo.com/quote/SPY/history?p=SPY).
+It's a simple wrapper around Yahoo Finance API, that allows to fetch market data for various financial instruments from Yahoo website. The same data can be viewed in "Historic Data" section. An example for the `SPY` ETF can be found [here](https://finance.yahoo.com/quote/SPY/history?p=SPY).
 
 ### Current state of the library
 
