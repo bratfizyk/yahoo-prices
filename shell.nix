@@ -2,5 +2,5 @@
 
 pkgs.stdenv.mkDerivation {
   name = "yahoo-prices-shell";
-  buildInputs = with pkgs; [ (import ./release.nix) ];
+  buildInputs = with pkgs; [ (import ./release.nix) zlib ];
 }
