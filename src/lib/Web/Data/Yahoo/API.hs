@@ -55,7 +55,7 @@ request t = YahooRequest {
 -- >>> fetch $ after (day 2021 01 07) . withDaily . request $ "RSX"
 -- Right [Price {date = 2021-01-07, ...}, {date = 2021-01-08, ...} ...]
 withDaily :: YahooRequest -> YahooRequest
-withDaily (YahooRequest {ticker = t, period = p}) = YahooRequest {
+withDaily YahooRequest {ticker = t, period = p} = YahooRequest {
     ticker   = t,
     interval = Just Daily,
     period   = p
@@ -68,7 +68,7 @@ withDaily (YahooRequest {ticker = t, period = p}) = YahooRequest {
 -- >>> fetch $ after (day 2021 01 08) . withWeekly . request $ "RSX"
 -- Right [Price {date = 2021-01-04, ...},Price {date = 2021-01-11, ...}, ...]
 withWeekly :: YahooRequest -> YahooRequest
-withWeekly (YahooRequest {ticker = t, period = p}) = YahooRequest {
+withWeekly YahooRequest {ticker = t, period = p} = YahooRequest {
     ticker   = t,
     interval = Just Weekly,
     period   = p
@@ -79,7 +79,7 @@ withWeekly (YahooRequest {ticker = t, period = p}) = YahooRequest {
 -- >>> fetch $ after (day 2021 01 08) . request $ "RSX"
 -- Right [Price {date = 2021-01-08, ...},Price {date = 2021-01-09, ...}, ...]
 after :: Day -> YahooRequest -> YahooRequest
-after day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
+after day YahooRequest {ticker = t, interval = i} = YahooRequest {
     ticker   = t,
     interval = i,
     period   = Just $ After day
@@ -90,7 +90,7 @@ after day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
 -- >>> fetch $ before (day 2021 01 08) . request $ "RSX"
 -- Right [Price {date = 2007-04-30, ...}, ..., Price {date = 2021-01-07, ...}]
 before :: Day -> YahooRequest -> YahooRequest
-before day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
+before day YahooRequest {ticker = t, interval = i} = YahooRequest {
     ticker   = t,
     interval = i,
     period   = Just $ Before day
@@ -101,7 +101,7 @@ before day (YahooRequest {ticker = t, interval = i}) = YahooRequest {
 -- >>> fetch $ between (day 2021 01 08, day 2021 01 12) . request $ "RSX"
 -- Right [Price {date = 2021-01-08, ...}, Price {date = 2021-01-11, ...}]
 between :: (Day, Day) -> YahooRequest -> YahooRequest
-between (from, to) (YahooRequest {ticker = t, interval = i}) = YahooRequest {
+between (from, to) YahooRequest {ticker = t, interval = i} = YahooRequest {
     ticker   = t,
     interval = i,
     period   = Just $ Range from to
