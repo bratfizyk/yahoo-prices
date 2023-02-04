@@ -1,7 +1,7 @@
 { mkDerivation, base, bytestring, Cabal, cassava, hspec, lens, stdenv, time, vector, wreq }:
 mkDerivation {
   pname = "yahoo-price";
-  version = "0.1.0.2";
+  version = "0.1.0.3";
   src = ./.;
   isLibrary = true;
   isExecutable = false;
