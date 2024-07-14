@@ -4,7 +4,7 @@ cabal-version:       2.0
 -- http://haskell.org/cabal/users-guide/
 
 name:                yahoo-prices
-version:             0.1.1.0
+version:             0.1.1.1
 synopsis:            A wrapper around Yahoo API for downloading market data.
 description:
   It's a simple wrapper around Yahoo Finance API, that allows to fetch
@@ -36,7 +36,7 @@ library yahoo-prices-utils
 library
   exposed-modules:     Web.Data.Yahoo.API,
                        Web.Data.Yahoo.Response
-  build-depends:       base >= 4.17 && < 4.18,
+  build-depends:       base >= 4.17 && < 4.20,
                        yahoo-prices-utils,
                        bytestring >= 0.11 && < 0.12,
                        cassava >= 0.5 && < 0.6,
