@@ -4,7 +4,7 @@ cabal-version:       2.0
 -- http://haskell.org/cabal/users-guide/
 
 name:                yahoo-prices
-version:             0.1.0.3
+version:             0.1.1.0
 synopsis:            A wrapper around Yahoo API for downloading market data.
 description:
   It's a simple wrapper around Yahoo Finance API, that allows to fetch
@@ -36,14 +36,14 @@ library yahoo-prices-utils
 library
   exposed-modules:     Web.Data.Yahoo.API,
                        Web.Data.Yahoo.Response
-  build-depends:       base >= 4.15 && < 4.16,
+  build-depends:       base >= 4.17 && < 4.18,
                        yahoo-prices-utils,
-                       bytestring >= 0.10.10 && < 0.11,
-                       cassava >= 0.5.2 && < 0.6,
-                       lens >= 4.18.1 && < 5.1,
-                       time >= 1.9.3 && < 1.10,
-                       vector >= 0.12.1 && < 0.13,
-                       wreq >= 0.5.3 && < 0.6
+                       bytestring >= 0.11 && < 0.12,
+                       cassava >= 0.5 && < 0.6,
+                       lens >= 5.2 && < 5.3,
+                       time >= 1.12 && < 1.13,
+                       vector >= 0.13 && < 0.14,
+                       wreq >= 0.5 && < 0.6
   hs-source-dirs:      src/lib
   default-language:    Haskell2010
 

@@ -7,7 +7,7 @@ import Text.Printf (printf)
 
 import Web.Data.Yahoo.Utils (dayAsEpoch)
 
-data Ticker = Ticker String
+newtype Ticker = Ticker String
 
 class YahooParam a where
     key    :: a -> String
@@ -39,13 +39,13 @@ instance YahooParam Events where
     symbol Dividends = "div"
     symbol Splits = "split"
 
-data FromEndpoint = FromEndpoint Day
+newtype FromEndpoint = FromEndpoint Day
 
 instance YahooParam FromEndpoint where
     key _ = "period1"
     symbol (FromEndpoint day) = show $ dayAsEpoch day
 
-data ToEndpoint = ToEndpoint Day
+newtype ToEndpoint = ToEndpoint Day
 
 instance YahooParam ToEndpoint where
     key _ = "period2"
@@ -84,7 +84,7 @@ requestUrl (YahooRequest { ticker = (Ticker t), interval = i, period = p }) =
         toEndpoint = fmap snd rangeEndpoints
 
         queryParams :: [String]
-        queryParams = catMaybes $ [
+        queryParams = catMaybes [
                 fmap paramToString i,
                 fmap paramToString fromEndpoint,
                 fmap paramToString toEndpoint
